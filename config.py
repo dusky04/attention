@@ -15,7 +15,7 @@ def get_config() -> Dict[str, Any]:
         "model_basename": "tmodel_",
         "preload": None,
         "tokenizer_file": "tokenizer_{0}.json",
-        "experiment_name": "runs/model",
+        "experiment_name": "runs/tmodel",
     }
 
 
