@@ -6,7 +6,7 @@ from transformer import Transformer, build_transformer
 
 import torch
 from torch import nn
-from torch.utils.data import Dataset, DataLoader, random_split
+from torch.utils.data import DataLoader, random_split
 from torch.utils.tensorboard import SummaryWriter
 
 from pathlib import Path
@@ -31,13 +31,14 @@ def get_all_sentences(ds, lang: str):
 
 def get_or_build_tokenizer(config, ds, lang: str) -> Tokenizer:
     tokenizer_path: Path = Path(config["tokenizer_file"].format(lang))
-    if not Path.exists(tokenizer_path):
+    if not tokenizer_path.exists():
         tokenizer: Tokenizer = Tokenizer(WordLevel(vocab={}, unk_token="[UNK]"))
         tokenizer.pre_tokenizer = Whitespace()
         trainer: WordLevelTrainer = WordLevelTrainer(
             special_tokens=["[UNK]", "[PAD]", "[SOS]", "[EOS]"], min_frequency=2
         )
         tokenizer.train_from_iterator(get_all_sentences(ds, lang), trainer=trainer)
+        tokenizer.save(str(tokenizer_path))
     else:
         tokenizer: Tokenizer = Tokenizer.from_file(str(tokenizer_path))
     return tokenizer
@@ -175,7 +176,9 @@ def train_model(config: Dict[str, Any]):
 
             label = batch["label"].to(device)
 
-            loss = loss_func(proj_output.view(-1, target_tokenizer.get_vocab_size()))
+            loss = loss_func(
+                proj_output.view(-1, target_tokenizer.get_vocab_size()), label.view(-1)
+            )
             batch_iterator.set_postfix({"Loss": f"{loss.item():6.3f}"})
             #  log it on tensorboard
             writer.add_scalar("Training Loss", loss.item(), global_step)

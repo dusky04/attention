@@ -40,7 +40,7 @@ class Encoder(nn.Module):
         self.layers: nn.ModuleList = layers
         self.norm: LayerNormalization = LayerNormalization()
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def forward(self, x: torch.Tensor, mask) -> torch.Tensor:
         for layer in self.layers:
-            x = layer(x)
+            x = layer(x, mask)
         return self.norm(x)
