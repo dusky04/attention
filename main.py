@@ -1,8 +1,8 @@
 import math
 from typing import Tuple
+
 import torch
 from torch import nn
-
 
 # TODO: Go through all dimension calculation
 

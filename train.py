@@ -1,28 +1,22 @@
+from pathlib import Path
 from typing import Any, Dict, Tuple, cast
 
-from tqdm import tqdm
-
-from test import run_validation
-from transformer import Transformer, build_transformer
-
+import datasets
 import torch
+from datasets import load_dataset
+from tokenizers import Tokenizer
+from tokenizers.models import WordLevel
+from tokenizers.pre_tokenizers import Whitespace
+from tokenizers.trainers import WordLevelTrainer
 from torch import nn
 from torch.utils.data import DataLoader, random_split
 from torch.utils.tensorboard import SummaryWriter
-
-from pathlib import Path
-
-import datasets
-from datasets import load_dataset
-
-from tokenizers import Tokenizer
-from tokenizers.models import WordLevel
-from tokenizers.trainers import WordLevelTrainer
-from tokenizers.pre_tokenizers import Whitespace
-
-from data import BilingualDataset
+from tqdm import tqdm
 
 from config import get_config, get_weights_file_path
+from data import BilingualDataset
+from test import run_validation
+from transformer import Transformer, build_transformer
 
 
 def get_all_sentences(ds, lang: str):

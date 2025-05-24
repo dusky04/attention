@@ -1,7 +1,7 @@
-from tokenizers import Tokenizer
-import torch
-from torch.utils.data import Dataset
 import datasets
+import torch
+from tokenizers import Tokenizer
+from torch.utils.data import Dataset
 
 # TODO: Understand CASUAL MASK
 

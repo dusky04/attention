@@ -1,7 +1,10 @@
-from tokenizers import Tokenizer
 import torch
-from torch.utils.tensorboard import SummaryWriter
 import torchmetrics
+from tokenizers import Tokenizer
+from torch.utils.data import DataLoader
+from torch.utils.tensorboard import SummaryWriter
+
+from data import casual_mask
 from transformer import Transformer
 
 
@@ -50,13 +53,13 @@ def greedy_decode(
 
 def run_validation(
     model: Transformer,
-    test_ds,
+    test_ds: DataLoader,
     src_tokenizer: Tokenizer,
     target_tokenizer: Tokenizer,
     max_len: int,
     device: torch.device,
     print_msg,
-    global_step,
+    global_step: int,
     writer: SummaryWriter,
     num_examples: int = 2,
 ):

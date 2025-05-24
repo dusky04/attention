@@ -2,9 +2,9 @@ import torch
 from torch import nn
 
 from main import (
+    FeedForwardNetwork,
     LayerNormalization,
     MultiHeadAttention,
-    FeedForwardNetwork,
     ResidualConnection,
 )
 

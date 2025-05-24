@@ -1,15 +1,16 @@
 from typing import List
+
 import torch
 from torch import nn
 
 from decoder import Decoder, DecoderBlock
 from encoder import Encoder, EncoderBlock
 from main import (
+    FeedForwardNetwork,
     InputEmbeddings,
+    MultiHeadAttention,
     PositionalEncoding,
     ProjectionLayer,
-    MultiHeadAttention,
-    FeedForwardNetwork,
 )
 
 
