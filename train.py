@@ -3,13 +3,13 @@ from typing import Any, Dict, Tuple, cast
 
 import datasets
 import torch
-from datasets import load_dataset
+from datasets import load_dataset, DatasetDict
 from tokenizers import Tokenizer
 from tokenizers.models import WordLevel
 from tokenizers.pre_tokenizers import Whitespace
 from tokenizers.trainers import WordLevelTrainer
 from torch import nn
-from torch.utils.data import DataLoader, random_split
+from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 
@@ -28,9 +28,10 @@ def get_or_build_tokenizer(config, ds, lang: str) -> Tokenizer:
     tokenizer_path: Path = Path(config["tokenizer_file"].format(lang))
     if not Path(tokenizer_path).exists():
         tokenizer: Tokenizer = Tokenizer(WordLevel(vocab={}, unk_token="[UNK]"))
-        tokenizer.pre_tokenizer = Whitespace()
+        tokenizer.pre_tokenizer = Whitespace()  # type: ignore
         trainer: WordLevelTrainer = WordLevelTrainer(
-            special_tokens=["[UNK]", "[PAD]", "[SOS]", "[EOS]"], min_frequency=2
+            special_tokens=["[UNK]", "[PAD]", "[SOS]", "[EOS]"],  # type: ignore
+            min_frequency=2,  # type: ignore
         )
         tokenizer.train_from_iterator(get_all_sentences(ds, lang), trainer=trainer)
         tokenizer.save(str(tokenizer_path))
@@ -60,9 +61,9 @@ def get_ds(
     )
 
     # 90% training and 10% testing
-    train_ds_size: int = int(0.9 * len(ds_raw))
-    test_ds_size: int = len(ds_raw) - train_ds_size
-    train_ds_raw, test_ds_raw = random_split(ds_raw, [train_ds_size, test_ds_size])
+    split_ds: DatasetDict = ds_raw.train_test_split(test_size=0.1)
+    train_ds_raw = split_ds["train"]
+    test_ds_raw = split_ds["test"]
 
     train_ds = BilingualDataset(
         train_ds_raw,
@@ -84,9 +85,9 @@ def get_ds(
     src_max_length: int = 0
     target_max_length: int = 0
     for item in ds_raw:
-        src_ids = src_tokenizer.encode(item["translation"][config["lang_src"]]).ids
+        src_ids = src_tokenizer.encode(item["translation"][config["lang_src"]]).ids  # type: ignore
         target_ids = target_tokenizer.encode(
-            item["translation"][config["lang_tgt"]]
+            item["translation"][config["lang_tgt"]]  # type: ignore
         ).ids
         src_max_length = max(src_max_length, len(src_ids))
         target_max_length = max(target_max_length, len(target_ids))
