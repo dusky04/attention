@@ -2,6 +2,7 @@ from typing import Any, Dict, Tuple, cast
 
 from tqdm import tqdm
 
+from test import run_validation
 from transformer import Transformer, build_transformer
 
 import torch
@@ -31,7 +32,7 @@ def get_all_sentences(ds, lang: str):
 
 def get_or_build_tokenizer(config, ds, lang: str) -> Tokenizer:
     tokenizer_path: Path = Path(config["tokenizer_file"].format(lang))
-    if not tokenizer_path.exists():
+    if not Path(tokenizer_path).exists():
         tokenizer: Tokenizer = Tokenizer(WordLevel(vocab={}, unk_token="[UNK]"))
         tokenizer.pre_tokenizer = Whitespace()
         trainer: WordLevelTrainer = WordLevelTrainer(
@@ -192,6 +193,19 @@ def train_model(config: Dict[str, Any]):
             optimizer.zero_grad()
 
             global_step += 1
+
+        # for every epoch run validation
+        run_validation(
+            model,
+            test_dataloader,
+            src_tokenizer,
+            target_tokenizer,
+            config["seq_len"],
+            device,
+            lambda msg: batch_iterator.write(msg),
+            global_step,
+            writer,
+        )
 
         # save the model
         model_filename = get_weights_file_path(config, f"{epoch:02d}")

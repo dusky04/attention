@@ -27,15 +27,15 @@ class BilingualDataset(Dataset):
 
         # sos - start of sentence
         self.sos_token: torch.Tensor = torch.tensor(
-            [src_tokenizer.token_to_id("SOS")], dtype=torch.int64
+            [src_tokenizer.token_to_id("[SOS]")], dtype=torch.int64
         )
         # eos - end of sentence
         self.eos_token: torch.Tensor = torch.tensor(
-            [src_tokenizer.token_to_id("EOS")], dtype=torch.int64
+            [src_tokenizer.token_to_id("[EOS]")], dtype=torch.int64
         )
         # pad - padding
         self.pad_token: torch.Tensor = torch.tensor(
-            [src_tokenizer.token_to_id("PAD")], dtype=torch.int64
+            [src_tokenizer.token_to_id("[PAD]")], dtype=torch.int64
         )
 
     def __len__(self) -> int:
