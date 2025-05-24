@@ -14,9 +14,9 @@ from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 
 from config import get_config, get_weights_file_path
-from data import BilingualDataset
-from test import run_validation
-from transformer import Transformer, build_transformer
+from dataset import BilingualDataset
+from validation import run_validation
+from models.transformer import Transformer, build_transformer
 
 
 def get_all_sentences(ds, lang: str):

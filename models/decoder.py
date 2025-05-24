@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 
-from main import (
+from components import (
     FeedForwardNetwork,
     LayerNormalization,
     MultiHeadAttention,

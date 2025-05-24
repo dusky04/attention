@@ -3,9 +3,9 @@ from typing import List
 import torch
 from torch import nn
 
-from decoder import Decoder, DecoderBlock
-from encoder import Encoder, EncoderBlock
-from main import (
+from models.decoder import Decoder, DecoderBlock
+from models.encoder import Encoder, EncoderBlock
+from models.components import (
     FeedForwardNetwork,
     InputEmbeddings,
     MultiHeadAttention,

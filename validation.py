@@ -4,8 +4,8 @@ from tokenizers import Tokenizer
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 
-from data import casual_mask
-from transformer import Transformer
+from dataset import casual_mask
+from models.transformer import Transformer
 
 
 def greedy_decode(
